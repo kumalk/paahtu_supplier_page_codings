@@ -1,0 +1,67 @@
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const coffeeField = document.querySelector('#form-field-coffee_volume');
+      const barrelRadios = document.querySelectorAll('input[name="form_fields[barrel_size]"]');
+    
+      const mapCoffeeToBarrel = {
+        "Less than 100": "30 L",
+        "100 - 200": "60 L",
+        "200 - 300": "60 L",
+        "300 - 400": "150 L",
+        "400 - 500": "150 L",
+        "More than 500": "220 L"
+      };
+    
+      function updateBarrelSelection(value) {
+        const desiredBarrel = mapCoffeeToBarrel[value];
+    
+        barrelRadios.forEach(radio => {
+          radio.checked = (radio.value === desiredBarrel);
+        });
+    
+        barrel_size_disable();  // call disable function after updating selection
+      }
+    
+      // Disable all barrel radios except the checked one
+      function barrel_size_disable() {
+        barrelRadios.forEach(radio => {
+          radio.disabled = !radio.checked;
+        });
+      }
+    
+      if (coffeeField.value) {
+        updateBarrelSelection(coffeeField.value);
+      }
+    
+      coffeeField.addEventListener('change', function () {
+        updateBarrelSelection(this.value);
+      });
+    
+      // ✅ Disable best_times[] checkboxes if "Anytime" is checked
+      const dayOfWeekCheckboxes = document.querySelectorAll('input[name="form_fields[day_of_week][]"]');
+      const bestTimesCheckboxes = document.querySelectorAll('input[name="form_fields[best_times][]"]');
+    
+      function toggleBestTimes() {
+        let anytimeChecked = Array.from(dayOfWeekCheckboxes).some(cb => cb.value === "Anytime" && cb.checked);
+        bestTimesCheckboxes.forEach(cb => {
+          cb.disabled = anytimeChecked;
+          if (anytimeChecked) cb.checked = false;
+        });
+      }
+    
+      // Initial check
+      toggleBestTimes();
+    
+      // Listen for change on all day_of_week checkboxes
+      dayOfWeekCheckboxes.forEach(cb => {
+        cb.addEventListener('change', toggleBestTimes);
+      });
+    });
+    
+    
+    
+    </script> 
+    
+    
+    
+    

@@ -1,0 +1,148 @@
+div.elementor-message.elementor-message-success.elementor-message-svg{
+    background-color: #2E4750;
+    border-radius: 10px;
+    padding: 20px;
+}
+.tooltip-icon {
+  position: relative;
+  cursor: pointer;
+}
+
+.tooltip-text {
+  visibility: hidden;
+  width: 200px;
+  background-color: #333;
+  color: #fff;
+  text-align: left;
+  border-radius: 4px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  top: 120%; /* Push it below the icon */
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  font-size: 12px;
+  white-space: normal;
+}
+
+.tooltip-icon:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+
+
+/* Base style */
+input[type="radio"],
+input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 1.5em;
+  height: 1.5em;
+  border: 2px solid #999;
+  border-radius: 0.35em;
+  background-color: white;
+  margin-right: 0.5em;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  position: relative;
+  vertical-align: middle;
+}
+
+/* Checked state */
+input[type="radio"]:checked,
+input[type="checkbox"]:checked {
+  border-color: #D85A1A;
+  background-color: #D85A1A;
+}
+
+/* Checkmark or dot */
+input[type="checkbox"]:checked::after {
+  content: "✔";
+  color: white;
+  font-size: 1em;
+  position: absolute;
+  top: 0;
+  left: 0.2em;
+}
+
+input[type="radio"] {
+  border-radius: 50%;
+}
+
+input[type="radio"]:checked::after {
+  content: "";
+  position: absolute;
+  top: 0.35em;
+  left: 0.35em;
+  width: 0.5em;
+  height: 0.5em;
+  border-radius: 50%;
+  background-color: white;
+}
+
+/* Label styling */
+label {
+  display: inline-flex;
+  align-items: center;
+  font-size: 1.2em;
+  margin: 0.5em 0;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+/* Grouping */
+.checkbox-group,
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6em;
+  margin-bottom: 1.5em;
+}
+
+/* Responsive tap area */
+@media (pointer: coarse) {
+  input[type="checkbox"],
+  input[type="radio"] {
+    width: 2em;
+    height: 2em;
+  }
+
+  label {
+    font-size: 1.4em;
+    padding: 0.3em 0.5em;
+  }
+}
+
+input[type="checkbox"]:disabled,
+input[type="radio"]:disabled {
+  background-color: #e0e0e0;
+  border-color: #ccc;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+input[type="checkbox"]:disabled:checked::after,
+input[type="radio"]:disabled:checked::after {
+  color: #999;
+  background-color: #ccc;
+}
+
+label:has(input:disabled) {
+  opacity: 0.6;
+  cursor: not-allowed;
+  text-decoration: none;
+}
+
+/* Hidding barrel size radio field and barrel suggesion fiels message box html */
+#barrel-message-box{
+  display: none !important;
+}
+
+.elementor-field-group-barrel_size {
+  display: none !important;
+}
