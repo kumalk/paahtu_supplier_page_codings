@@ -1,0 +1,80 @@
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const coffeeField = document.querySelector('#form-field-coffee_volume');
+  const barrelRadios = document.querySelectorAll('input[name="form_fields[barrel_size]"]');
+
+  const mapCoffeeToBarrel = {
+    "Less than 100": "30 L",
+    "100 - 200": "60 L",
+    "200 - 300": "60 L",
+    "300 - 400": "150 L",
+    "400 - 500": "150 L",
+    "More than 500": "220 L"
+  };
+
+  function updateBarrelSelection(value) {
+    const desiredBarrel = mapCoffeeToBarrel[value];
+
+    barrelRadios.forEach(radio => {
+      radio.checked = (radio.value === desiredBarrel);
+    });
+
+    barrel_size_disable();  // call disable function after updating selection
+  }
+
+  // Disable all barrel radios except the checked one
+  function barrel_size_disable() {
+    barrelRadios.forEach(radio => {
+      radio.disabled = !radio.checked;
+    });
+  }
+
+  if (coffeeField.value) {
+    updateBarrelSelection(coffeeField.value);
+  }
+
+  coffeeField.addEventListener('change', function () {
+    updateBarrelSelection(this.value);
+  });
+
+  
+
+  // ✅ Appended code: Show message when is_space_available changes
+  const spaceRadios = document.querySelectorAll('input[name="form_fields[is_space_available]"]');
+  const messageBox = document.getElementById("barrel-message-box");
+
+  function getDesiredBarrel() {
+    return mapCoffeeToBarrel[coffeeField.value] || "a suitable";
+  }
+
+  function updateBarrelMessageBox(value) {
+    const desiredBarrel = getDesiredBarrel();
+
+    if (value === "Yes") {
+      messageBox.innerHTML =
+        `<strong>✅  We would like to place a ${desiredBarrel} collection barrel at your premises.</strong><br> ` +
+        `If you are located in a shopping complex, we can place it at your central waste collection center based on confirmation.`;
+      messageBox.style.display = "block";
+    } else if (value === "No") {
+      messageBox.innerHTML =
+        `❌ <strong>Without placing a collection barrel we would not be able to provide our services to you.</strong><br> ` +
+        `If you are located in a shopping complex we can check if a collection barrel can be kept at a central collection point upon confirmation.`;
+      messageBox.style.display = "block";
+    } else {
+      messageBox.style.display = "none";
+    }
+  }
+
+  // Listen to change on is_space_available
+  spaceRadios.forEach(radio => {
+    radio.addEventListener("change", () => {
+      updateBarrelMessageBox(radio.value);
+    });
+
+    // Trigger if pre-selected on load
+    if (radio.checked) {
+      updateBarrelMessageBox(radio.value);
+    }
+  });
+});
+</script>

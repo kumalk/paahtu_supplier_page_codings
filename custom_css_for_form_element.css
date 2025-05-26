@@ -140,9 +140,12 @@ label:has(input:disabled) {
 
 /* Hidding barrel size radio field and barrel suggesion fiels message box html */
 #barrel-message-box{
-  display: none !important;
+  display: none;
 }
 
 .elementor-field-group-barrel_size {
   display: none !important;
+}
+
+#barrel-message-box{ style="} margin-top:1em; background-color: #E8D9C2; padding: 10px; border-radius: 10px;
 }

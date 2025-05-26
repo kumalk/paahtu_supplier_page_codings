@@ -56,12 +56,43 @@
       dayOfWeekCheckboxes.forEach(cb => {
         cb.addEventListener('change', toggleBestTimes);
       });
+    
+      // ✅ Appended code: Show message when is_space_available changes
+      const spaceRadios = document.querySelectorAll('input[name="form_fields[is_space_available]"]');
+      const messageBox = document.getElementById("barrel-message-box");
+    
+      function getDesiredBarrel() {
+        return mapCoffeeToBarrel[coffeeField.value] || "a suitable";
+      }
+    
+      function updateBarrelMessageBox(value) {
+        const desiredBarrel = getDesiredBarrel();
+    
+        if (value === "Yes") {
+          messageBox.innerHTML =
+            `<strong>✅  We would like to place a ${desiredBarrel} collection barrel at your premises.</strong><br> ` +
+            `If you are located in a shopping complex, we can place it at your central waste collection center based on confirmation.`;
+          messageBox.style.display = "block";
+        } else if (value === "No") {
+          messageBox.innerHTML =
+            `❌ <strong>Without placing a collection barrel we would not be able to provide our services to you.</strong><br> ` +
+            `If you are located in a shopping complex we can check if a collection barrel can be kept at a central collection point upon confirmation.`;
+          messageBox.style.display = "block";
+        } else {
+          messageBox.style.display = "none";
+        }
+      }
+    
+      // Listen to change on is_space_available
+      spaceRadios.forEach(radio => {
+        radio.addEventListener("change", () => {
+          updateBarrelMessageBox(radio.value);
+        });
+    
+        // Trigger if pre-selected on load
+        if (radio.checked) {
+          updateBarrelMessageBox(radio.value);
+        }
+      });
     });
-    
-    
-    
-    </script> 
-    
-    
-    
-    
+    </script>
