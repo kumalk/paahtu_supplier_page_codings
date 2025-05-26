@@ -138,7 +138,7 @@ label:has(input:disabled) {
   text-decoration: none;
 }
 
-/* Hidding barrel size radio field and barrel suggesion fiels message box html */
+ Hidding barrel size radio field and barrel suggesion fiels message box html 
 #barrel-message-box{
   display: none;
 }
@@ -147,5 +147,7 @@ label:has(input:disabled) {
   display: none !important;
 }
 
-#barrel-message-box{ style="} margin-top:1em; background-color: #E8D9C2; padding: 10px; border-radius: 10px;
+#barrel-message-box{ style="} 
+    display:none;
+    margin-top:1em; background-color: #E8D9C2; padding: 10px; border-radius: 10px;
 }
