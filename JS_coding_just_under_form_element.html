@@ -2,6 +2,8 @@
     document.addEventListener("DOMContentLoaded", function () {
       const coffeeField = document.querySelector('#form-field-coffee_volume');
       const barrelRadios = document.querySelectorAll('input[name="form_fields[barrel_size]"]');
+      const spaceRadios = document.querySelectorAll('input[name="form_fields[is_space_available]"]');
+      const messageBox = document.getElementById("barrel-message-box");
     
       const mapCoffeeToBarrel = {
         "Less than 100": "30 L",
@@ -14,11 +16,9 @@
     
       function updateBarrelSelection(value) {
         const desiredBarrel = mapCoffeeToBarrel[value];
-    
         barrelRadios.forEach(radio => {
           radio.checked = (radio.value === desiredBarrel);
         });
-    
         barrel_size_disable();
       }
     
@@ -28,12 +28,39 @@
         });
       }
     
+      function getDesiredBarrel() {
+        return mapCoffeeToBarrel[coffeeField.value] || "a suitable";
+      }
+    
+      function updateBarrelMessageBox(value) {
+        const desiredBarrel = getDesiredBarrel();
+        if (value === "Yes") {
+          messageBox.innerHTML =
+            `<strong>✅  We would like to place a ${desiredBarrel} collection barrel at your premises.</strong><br>` +
+            `If you are located in a shopping complex, we can place it at your central waste collection center based on confirmation.`;
+          messageBox.style.display = "block";
+        } else if (value === "No") {
+          messageBox.innerHTML =
+            `❌ <strong>Without placing a collection barrel we would not be able to provide our services to you.</strong><br>` +
+            `If you are located in a shopping complex we can check if a collection barrel can be kept at a central collection point upon confirmation.`;
+          messageBox.style.display = "block";
+        } else {
+          messageBox.style.display = "none";
+        }
+      }
+    
       if (coffeeField.value) {
         updateBarrelSelection(coffeeField.value);
       }
     
       coffeeField.addEventListener('change', function () {
         updateBarrelSelection(this.value);
+    
+        // ⭐️ Update barrel message box if any space option is selected
+        const selectedSpaceOption = Array.from(spaceRadios).find(r => r.checked);
+        if (selectedSpaceOption) {
+          updateBarrelMessageBox(selectedSpaceOption.value);
+        }
       });
     
       // === ANYTIME functionality ===
@@ -61,7 +88,6 @@
     
       toggleBestTimes(); // Initial call
     
-    
       // === ANYDAY functionality ===
       const dayOfWeekCheckboxes = document.querySelectorAll('input[name="form_fields[day_of_week][]"]');
     
@@ -87,32 +113,7 @@
     
       toggleDayOfWeek(); // Initial call
     
-      // === is_space_available message display ===
-      const spaceRadios = document.querySelectorAll('input[name="form_fields[is_space_available]"]');
-      const messageBox = document.getElementById("barrel-message-box");
-    
-      function getDesiredBarrel() {
-        return mapCoffeeToBarrel[coffeeField.value] || "a suitable";
-      }
-    
-      function updateBarrelMessageBox(value) {
-        const desiredBarrel = getDesiredBarrel();
-    
-        if (value === "Yes") {
-          messageBox.innerHTML =
-            `<strong>✅  We would like to place a ${desiredBarrel} collection barrel at your premises.</strong><br> ` +
-            `If you are located in a shopping complex, we can place it at your central waste collection center based on confirmation.`;
-          messageBox.style.display = "block";
-        } else if (value === "No") {
-          messageBox.innerHTML =
-            `❌ <strong>Without placing a collection barrel we would not be able to provide our services to you.</strong><br> ` +
-            `If you are located in a shopping complex we can check if a collection barrel can be kept at a central collection point upon confirmation.`;
-          messageBox.style.display = "block";
-        } else {
-          messageBox.style.display = "none";
-        }
-      }
-    
+      // === is_space_available listener ===
       spaceRadios.forEach(radio => {
         radio.addEventListener("change", () => {
           updateBarrelMessageBox(radio.value);
