@@ -19,10 +19,9 @@
           radio.checked = (radio.value === desiredBarrel);
         });
     
-        barrel_size_disable();  // call disable function after updating selection
+        barrel_size_disable();
       }
     
-      // Disable all barrel radios except the checked one
       function barrel_size_disable() {
         barrelRadios.forEach(radio => {
           radio.disabled = !radio.checked;
@@ -37,11 +36,50 @@
         updateBarrelSelection(this.value);
       });
     
-      // ✅ Disable best_times[] checkboxes if "Anytime" is checked
-      const dayOfWeekCheckboxes = document.querySelectorAll('input[name="form_fields[day_of_week][]"]');
+      // ✅ Manage best_times[] checkboxes based on "Anytime"
       const bestTimesCheckboxes = document.querySelectorAll('input[name="form_fields[best_times][]"]');
     
       function toggleBestTimes() {
+        const anytimeBox = Array.from(bestTimesCheckboxes).find(cb => cb.value === "Anytime");
+        const otherBoxes = Array.from(bestTimesCheckboxes).filter(cb => cb.value !== "Anytime");
+    
+        if (anytimeBox.checked) {
+          otherBoxes.forEach(cb => {
+            cb.checked = false;
+            cb.disabled = true;
+          });
+        } else {
+          otherBoxes.forEach(cb => {
+            cb.disabled = false;
+          });
+        }
+      }
+    
+      bestTimesCheckboxes.forEach(cb => {
+        cb.addEventListener('change', toggleBestTimes);
+      });
+    
+      toggleBestTimes();
+    
+      // ✅ Manage day_of_week[] checkboxes based on "Anyday"
+      const dayOfWeekCheckboxes = document.querySelectorAll('input[name="form_fields[day_of_week][]"]');
+    
+      function toggleDayOfWeek() {
+        const anydayBox = Array.from(dayOfWeekCheckboxes).find(cb => cb.value === "Anyday");
+        const otherDayBoxes = Array.from(dayOfWeekCheckboxes).filter(cb => cb.value !== "Anyday");
+    
+        if (anydayBox.checked) {
+          otherDayBoxes.forEach(cb => {
+            cb.checked = false;
+            cb.disabled = true;
+          });
+        } else {
+          otherDayBoxes.forEach(cb => {
+            cb.disabled = false;
+          });
+        }
+    
+        // Also disable bestTimes if "Anytime" is in day_of_week (legacy logic from second script)
         let anytimeChecked = Array.from(dayOfWeekCheckboxes).some(cb => cb.value === "Anytime" && cb.checked);
         bestTimesCheckboxes.forEach(cb => {
           cb.disabled = anytimeChecked;
@@ -49,15 +87,13 @@
         });
       }
     
-      // Initial check
-      toggleBestTimes();
-    
-      // Listen for change on all day_of_week checkboxes
       dayOfWeekCheckboxes.forEach(cb => {
-        cb.addEventListener('change', toggleBestTimes);
+        cb.addEventListener('change', toggleDayOfWeek);
       });
     
-      // ✅ Appended code: Show message when is_space_available changes
+      toggleDayOfWeek();
+    
+      // ✅ Message based on is_space_available
       const spaceRadios = document.querySelectorAll('input[name="form_fields[is_space_available]"]');
       const messageBox = document.getElementById("barrel-message-box");
     
@@ -70,12 +106,12 @@
     
         if (value === "Yes") {
           messageBox.innerHTML =
-            `<strong>✅  We would like to place a ${desiredBarrel} collection barrel at your premises.</strong><br> ` +
+            `<strong>✅ We would like to place a ${desiredBarrel} collection barrel at your premises.</strong><br>` +
             `If you are located in a shopping complex, we can place it at your central waste collection center based on confirmation.`;
           messageBox.style.display = "block";
         } else if (value === "No") {
           messageBox.innerHTML =
-            `❌ <strong>Without placing a collection barrel we would not be able to provide our services to you.</strong><br> ` +
+            `❌ <strong>Without placing a collection barrel we would not be able to provide our services to you.</strong><br>` +
             `If you are located in a shopping complex we can check if a collection barrel can be kept at a central collection point upon confirmation.`;
           messageBox.style.display = "block";
         } else {
@@ -83,16 +119,16 @@
         }
       }
     
-      // Listen to change on is_space_available
       spaceRadios.forEach(radio => {
         radio.addEventListener("change", () => {
           updateBarrelMessageBox(radio.value);
         });
     
-        // Trigger if pre-selected on load
         if (radio.checked) {
           updateBarrelMessageBox(radio.value);
         }
       });
     });
     </script>
+    
+    
